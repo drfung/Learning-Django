@@ -1,0 +1,19 @@
+{% load staticfiles %}
+<div class="container">
+    <nav class="navbar-brand navbar-default" role="navigation" style="width: 100%;margin-bottom: 10px">
+        <ul class="navbar-header">
+            <a href="#" class="navbar-brand">
+                <img width="50px" height="50px" src="{% static 'images/pingan.png' %}" alt="">
+            </a>
+        </ul>
+        <ul class="nav navbar-nav">
+            <li><a href="{% url 'article:article_column' %}">文章管理</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right" style="margin-right: 10px">
+            <li><a href="{% url 'blog:blog_title' %}">网站首页</a></li>
+            <li><span>{{ user.username }}</span></li>
+            <li><a href="{% url 'account:user_logout' %}">登出</a></li>
+        </ul>
+
+    </nav>
+</div>

@@ -1,0 +1,111 @@
+{% extends 'article/base.html' %}
+{% load staticfiles %}
+{% block title %}article detail{% endblock %}
+
+{#{% block content %}#}
+{#    <header>#}
+{#        <h1 class="text-capitalize text-center">{{ article.title }}</h1>#}
+{#        <p class="text-right">作者:{{ user.username }}</p>#}
+{#    </header>#}
+{#     <link rel="stylesheet" href="{% static 'editor/css/editormd.preview.min.css' %}">#}
+{#    <div id="editormd-view">#}
+{#        <textarea id="append_test" style="display: none">{{ article.body }}</textarea>#}
+{#    </div>#}
+{#    <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>#}
+{#    <script src="{% static 'editor/lib/marked.min.js' %}"></script>#}
+{#    <script src="{% static 'editor/lib/prettify.min.js' %}"></script>#}
+{#    <script src="{% static 'editor/lib/raphael.min.js' %}"></script>#}
+{#    <script src="{% static 'editor/lib/underscore.min.js' %}"></script>#}
+{#    <script src="{% static 'editor/lib/sequence-diagram.min.js' %}"></script>#}
+{#    <script src="{% static 'editor/lib/flowchart.min.js' %}"></script>#}
+{#    <script src="{% static 'editor/lib/jquery.flowchart.min.js' %}"></script>#}
+{#    <script src="{% static 'editor/editormd.min.js' %}"></script>#}
+{#    <script type="text/javascript">#}
+{#    $(function(){#}
+{#        editormd.markdownToHTML('editormd-view',{#}
+{#            htmlDecode      : "style,script,iframe",  // you can filter tags decode#}
+{#            emoji           : true,#}
+{#            taskList        : true,#}
+{#            tex             : true,  // 默认不解析#}
+{#            flowChart       : true,  // 默认不解析#}
+{#            sequenceDiagram : true,  // 默认不解析#}
+{#        })#}
+{#    })#}
+{#    </script>#}
+{#{% endblock %}#}
+
+{% block content %}
+    {% with total_likes=article.users_like.count user_like=article.users_like.all %}
+        <div class="container">
+            <header>
+                <h1>{{ article.title }}</h1>
+                <p>
+                    <a href="{% url 'article:author_articles' article.author.username %}">{{ article.author.username }}</a>
+                    <span style="margin-left: 20px;"
+                          class="glyphicon glyphicon-thumbs-up"><strong style="margin-left: 2px">{{ total_likes }}</strong>like{{ total_likes|pluralize }}</span>
+                </p>
+            </header>
+
+            <link rel="stylesheet" href="{% static 'editor/css/editormd.preview.min.css' %}">
+            <div id="editormd-view">
+                <textarea id="append-test" style="display: none">{{ article.body }}</textarea>
+            </div>
+        <div>
+            <p class="text-center">
+                <a onclick="like_article({{ article.id }}, 'like')"><span class="glyphicon glyphicon-thumbs-up">like</span></a>
+                <a onclick="like_article({{ article.id }}, 'unlike')"><span class="glyphicon glyphicon-thumbs-down">unlike</span></a>
+            </p>
+        </div>
+        <div>
+            <p class="text-center"><strong>点赞本文的读者</strong></p>
+            {% for user in article.users_like.all %}
+                <p class="text-center">{{ user.username }}</p>
+                {% empty %}
+                <p class="text-center">还没有人对这篇文章点赞</p>
+            {% endfor %}
+        </div>
+        </div>
+
+        <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+        <script src="{% static 'editor/lib/marked.min.js' %}"></script>
+        <script src="{% static 'editor/lib/prettify.min.js' %}"></script>
+        <script src="{% static 'editor/lib/raphael.min.js' %}"></script>
+        <script src="{% static 'editor/lib/underscore.min.js' %}"></script>
+        <script src="{% static 'editor/lib/sequence-diagram.min.js' %}"></script>
+        <script src="{% static 'editor/lib/flowchart.min.js' %}"></script>
+        <script src="{% static 'editor/lib/jquery.flowchart.min.js' %}"></script>
+        <script src="{% static 'editor/editormd.min.js' %}"></script>
+
+        <script src="{% static 'js/layer.js' %}"></script>
+
+        <script type="text/javascript">
+            $(function () {
+                editormd.markdownToHTML('editormd-view', {
+                    htmlDecode: "style,script,iframe",  // you can filter tags decode
+                    emoji: true,
+                    taskList: true,
+                    tex: true,  // 默认不解析
+                    flowChart: true,  // 默认不解析
+                    sequenceDiagram: true,  // 默认不解析
+                })
+            });
+
+            function like_article(id, action){
+                $.ajax({
+                    url: "{% url 'article:like_article' %}",
+                    type: "post",
+                    data: {"id": id , "action": action},
+                    success: function(e){
+                     if(e == '1'){
+                         layer.msg("感谢点赞");
+                         window.location.reload();
+                     } else{
+                         layer.msg("我会继续努力的");
+                         window.location.reload();
+                     }
+                    },
+                })
+            }
+        </script>
+    {% endwith %}
+{% endblock %}

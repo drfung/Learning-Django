@@ -1,0 +1,18 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, inital-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'bs/css/bootstrap.min.css' %}">
+</head>
+<body>
+{% include "header.html" %}
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+{% include "footer.html" %}
+{% block javascripts %}{% endblock %}
+</body>
+</html>
